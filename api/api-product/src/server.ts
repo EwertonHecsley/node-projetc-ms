@@ -1,13 +1,4 @@
-import 'dotenv/config'
-import app from "./app";
-import EnvironmentValidator from './EnviromentValidate';
+import 'dotenv/config';
+import { App } from './App';
 
-
-const envValidator = new EnvironmentValidator();
-
-envValidator.validateEnvironmentVariables();
-
-const PORT = process.env.PORT;
-
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
-
+new App().bootstrap();
