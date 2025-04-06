@@ -1,12 +1,13 @@
 import { Either, left, right } from "../../utils/Either.response";
 import Product from "../entity/Product.entity";
+import { NotFoundError } from "../errors/custom/NotFound.error";
 import { ProductRepository } from "../repository/Product.repository";
 
 type Request = {
     id: string;
 }
 
-type Response = Either<null, Product>;
+type Response = Either<null | NotFoundError, Product>;
 
 export class FindPruductUseCase {
 
@@ -15,7 +16,7 @@ export class FindPruductUseCase {
     async execute({ id }: Request): Promise<Response> {
         const product = await this.productRepository.findMany(id);
 
-        if (!product) return left(null);
+        if (!product) return left(new NotFoundError());
 
         return right(product);
     }
