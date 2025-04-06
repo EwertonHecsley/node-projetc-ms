@@ -1,6 +1,6 @@
 import joi from 'joi';
 
-const schemaProduct = joi.object(
+export const schemaProduct = joi.object(
     {
         name: joi.string().required().regex(/^[A-Za-z\s]+$/).messages(
             {
