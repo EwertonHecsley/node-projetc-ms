@@ -33,10 +33,12 @@ export class ProductPrismaRepository implements ProductRepository {
     }
 
     async save(planet: Product): Promise<void> {
+        const data = ProductPrismaMapper.toDatabase(planet);
 
+        await this.prisma.product.update({ where: { id: data.id }, data });
     }
 
     async destroy(id: string): Promise<void> {
-
+        await this.prisma.product.delete({ where: { id } });
     }
 }
