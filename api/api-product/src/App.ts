@@ -7,6 +7,7 @@ export class App {
     private readonly port = process.env.PORT
 
     async bootstrap(): Promise<void> {
+        await this.prisma.connect()
         this.validateEnv();
         this.startServer();
         this.handleGracefulShutdown();
