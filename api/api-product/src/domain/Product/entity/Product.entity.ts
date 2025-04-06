@@ -33,7 +33,7 @@ export default class Product extends Entity<ProductType> {
         this.attributes.price = price;
     }
 
-    set descriprion(descriprion: string) {
+    set description(description: string) {
         this.attributes.description;
     }
 }
