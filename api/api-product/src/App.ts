@@ -26,10 +26,11 @@ export class App {
 
     private handleGracefulShutdown(): void {
         process.on('SIGINT', async () => {
-            console.log('\n Finalizando conexão com o banco...');
+            console.log('\n Shutting down database connection...');
             await this.prisma.disconnect();
-            console.log('✅ Prisma desconectado. Encerrando aplicação.');
+            console.log('✅ Prisma disconnected. Shutting down application.');
             process.exit(0);
         });
     }
+
 }
