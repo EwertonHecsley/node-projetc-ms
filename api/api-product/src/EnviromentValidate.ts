@@ -1,4 +1,5 @@
 import * as joi from 'joi';
+import logger from './domain/utils/logger';
 
 export default class EnvironmentValidator {
     private envVarsSchema: joi.ObjectSchema;
@@ -20,10 +21,10 @@ export default class EnvironmentValidator {
         const { error } = this.envVarsSchema.validate(process.env);
 
         if (error) {
-            console.error('Error validating environment variables:', error.message);
+            logger.warn('Error validating environment variables:', error.message);
             process.exit(1);
         }
 
-        console.log(`Validating environment variables`);
+        logger.info('Validating environment variables');
     }
 };

@@ -1,6 +1,7 @@
 import app from './index';
 import EnvironmentValidator from './EnviromentValidate';
 import getPrismaInstance from './infra/database/prisma/singleton.prisma';
+import logger from './domain/utils/logger';
 
 export class App {
     private prisma = getPrismaInstance();
@@ -20,15 +21,16 @@ export class App {
 
     private startServer(): void {
         app.listen(this.port, () => {
-            console.log(`🚀 Server is running on port ${this.port}`);
+            logger.info(`🟢 Server is running on port ${this.port}`);
         });
     }
 
     private handleGracefulShutdown(): void {
         process.on('SIGINT', async () => {
-            console.log('\n Shutting down database connection...');
+            logger.info('\n🔌 Gracefully shutting down...');
+            logger.info('Closing Prisma connection...');
             await this.prisma.disconnect();
-            console.log('✅ Prisma disconnected. Shutting down application.');
+            logger.info('✅ Prisma disconnected. Application terminated.');
             process.exit(0);
         });
     }
