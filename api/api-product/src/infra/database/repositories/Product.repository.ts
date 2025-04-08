@@ -41,4 +41,14 @@ export class ProductPrismaRepository implements ProductRepository {
     async destroy(id: string): Promise<void> {
         await this.prisma.product.delete({ where: { id } });
     }
+
+    async findName(name: string): Promise<Product | undefined> {
+        const result = await this.prisma.product.findFirst({ where: { name } });
+
+        if (!result) {
+            return undefined;
+        }
+
+        return ProductPrismaMapper.toDomain(result);
+    }
 }

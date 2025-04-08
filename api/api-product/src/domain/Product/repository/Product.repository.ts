@@ -6,4 +6,5 @@ export abstract class ProductRepository {
     abstract find(): Promise<Product[]>
     abstract save(planet: Product): Promise<void>;
     abstract destroy(id: string): Promise<void>;
+    abstract findName(name: string): Promise<Product | undefined>
 }

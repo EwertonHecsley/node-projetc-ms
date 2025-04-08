@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { ProductPresenter } from "../presenters/Product.presenters";
 import { ProductPrismaRepository } from "../../infra/database/repositories/Product.repository";
 import { CreateProductUseCase } from "../../domain/Product/useCase/create";
+import { GenericErrors } from "../../domain/Product/errors/GenericError";
 
 export class ProductController {
     private readonly repository = new ProductPrismaRepository();
@@ -15,12 +16,13 @@ export class ProductController {
         const result = await this.createUseCase.execute({ name, price, description });
 
         if (result.isLeft()) {
-            res.status(500).json({ message: 'Erro interno, produto não cadastrado' });
+            const error = result.value as GenericErrors;
+            res.status(error.statusCode).json({ message: error.message });
             return;
         }
 
         res.status(201).json({
-            message: 'Produto cadastrado com sucesso!',
+            message: 'Product created successfully.',
             product: ProductPresenter.toHTTP(result.value),
         });
     }
