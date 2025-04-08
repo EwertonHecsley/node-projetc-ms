@@ -1,10 +1,13 @@
 import { Router } from 'express';
 import { ProductController } from '../http/controllers/Product.controller';
+import { wrapController } from '../domain/utils/assyncController';
+import { validate } from '../http/middlewares/validate';
+import { schemaProduct } from '../domain/Product/schema/schema.product';
 
 
 const productRoutes = Router();
-const controller = new ProductController();
+const controller = wrapController(new ProductController());
 
-productRoutes.post("/", (req, res) => controller.create(req, res));
+productRoutes.post("/", validate(schemaProduct), controller.create);
 
 export default productRoutes;
