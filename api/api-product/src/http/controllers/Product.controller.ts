@@ -6,6 +6,7 @@ import { GenericErrors } from "../../domain/Product/errors/GenericError";
 import logger from "../../domain/utils/logger";
 import { ListProductsUseCase } from "../../domain/Product/useCase/list";
 import { FindPruductUseCase } from "../../domain/Product/useCase/find";
+import { IdParamSchema } from "../../domain/Product/schema/schema.paramsID";
 
 export class ProductController {
     private readonly repository = new ProductPrismaRepository();
@@ -50,24 +51,34 @@ export class ProductController {
     }
 
     async find(req: Request, res: Response): Promise<void> {
-        const { id } = req.params;
+
+        const { error, value } = IdParamSchema.validate(req.params);
+
+        if (error) {
+            logger.warn(`❌ Invalid ID format: ${error.message}`);
+            res.status(400).json({
+                message: 'Validation failed.',
+                errors: error.details.map((d) => d.message),
+            });
+            return;
+        }
+
+        const { id } = value;
 
         logger.info('📦 Searching product by ID...');
         const result = await this.findUsecCase.execute({ id });
 
         if (result.isLeft()) {
             const error = result.value as GenericErrors;
-            logger.warn(`❌ Searching product failed: ${result.value?.message}`);
+            logger.warn(`❌ Searching product failed: ${error.message}`);
             res.status(error.statusCode).json({ message: error.message });
             return;
         }
 
-        logger.info('✅ Product found successfully.')
-        res.status(200).json(
-            {
-                message: 'Product successfully.',
-                product: ProductPresenter.toHTTP(result.value)
-            }
-        )
+        logger.info('✅ Product found successfully.');
+        res.status(200).json({
+            message: 'Product retrieved successfully.',
+            product: ProductPresenter.toHTTP(result.value),
+        });
     }
 }
