@@ -9,5 +9,6 @@ const productRoutes = Router();
 const controller = wrapController(new ProductController());
 
 productRoutes.post("/", validate(schemaProduct), controller.create);
+productRoutes.get("/", controller.list);
 
 export default productRoutes;

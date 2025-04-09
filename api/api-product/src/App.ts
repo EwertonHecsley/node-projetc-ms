@@ -27,7 +27,7 @@ export class App {
 
     private handleGracefulShutdown(): void {
         process.on('SIGINT', async () => {
-            logger.info('\n🔌 Gracefully shutting down...');
+            logger.info('🔌 Gracefully shutting down...');
             logger.info('Closing Prisma connection...');
             await this.prisma.disconnect();
             logger.info('✅ Prisma disconnected. Application terminated.');

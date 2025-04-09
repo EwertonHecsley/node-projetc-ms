@@ -4,10 +4,12 @@ import { ProductPrismaRepository } from "../../infra/database/repositories/Produ
 import { CreateProductUseCase } from "../../domain/Product/useCase/create";
 import { GenericErrors } from "../../domain/Product/errors/GenericError";
 import logger from "../../domain/utils/logger";
+import { ListProductsUseCase } from "../../domain/Product/useCase/list";
 
 export class ProductController {
     private readonly repository = new ProductPrismaRepository();
     private readonly createUseCase = new CreateProductUseCase(this.repository);
+    private readonly listUseCase = new ListProductsUseCase(this.repository);
 
     async create(req: Request, res: Response): Promise<void> {
 
@@ -24,9 +26,24 @@ export class ProductController {
         }
 
         logger.info('✅ Product created successfully');
-        res.status(201).json({
-            message: 'Product created successfully.',
-            product: ProductPresenter.toHTTP(result.value),
-        });
+        res.status(201).json(
+            {
+                message: 'Product created successfully.',
+                product: ProductPresenter.toHTTP(result.value),
+            }
+        );
+    }
+
+    async list(req_: Request, res: Response): Promise<void> {
+        logger.info('📦 Listing products...');
+        const products = await this.listUseCase.execute();
+
+        logger.info('✅ Product listed successfully');
+        res.status(200).json(
+            {
+                message: 'Products list ok',
+                products: products.value?.map(ProductPresenter.toHTTP)
+            }
+        )
     }
 }
