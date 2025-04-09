@@ -5,11 +5,13 @@ import { CreateProductUseCase } from "../../domain/Product/useCase/create";
 import { GenericErrors } from "../../domain/Product/errors/GenericError";
 import logger from "../../domain/utils/logger";
 import { ListProductsUseCase } from "../../domain/Product/useCase/list";
+import { FindPruductUseCase } from "../../domain/Product/useCase/find";
 
 export class ProductController {
     private readonly repository = new ProductPrismaRepository();
     private readonly createUseCase = new CreateProductUseCase(this.repository);
     private readonly listUseCase = new ListProductsUseCase(this.repository);
+    private readonly findUsecCase = new FindPruductUseCase(this.repository);
 
     async create(req: Request, res: Response): Promise<void> {
 
@@ -25,7 +27,7 @@ export class ProductController {
             return;
         }
 
-        logger.info('✅ Product created successfully');
+        logger.info('✅ Product created successfully.');
         res.status(201).json(
             {
                 message: 'Product created successfully.',
@@ -43,6 +45,28 @@ export class ProductController {
             {
                 message: 'Products list ok',
                 products: products.value?.map(ProductPresenter.toHTTP)
+            }
+        )
+    }
+
+    async find(req: Request, res: Response): Promise<void> {
+        const { id } = req.params;
+
+        logger.info('📦 Searching product by ID...');
+        const result = await this.findUsecCase.execute({ id });
+
+        if (result.isLeft()) {
+            const error = result.value as GenericErrors;
+            logger.warn(`❌ Searching product failed: ${result.value?.message}`);
+            res.status(error.statusCode).json({ message: error.message });
+            return;
+        }
+
+        logger.info('✅ Product found successfully.')
+        res.status(200).json(
+            {
+                message: 'Product successfully.',
+                product: ProductPresenter.toHTTP(result.value)
             }
         )
     }

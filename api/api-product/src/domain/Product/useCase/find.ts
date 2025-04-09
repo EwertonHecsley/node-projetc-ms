@@ -16,7 +16,7 @@ export class FindPruductUseCase {
     async execute({ id }: Request): Promise<Response> {
         const product = await this.productRepository.findMany(id);
 
-        if (!product) return left(new NotFoundError());
+        if (!product) return left(new NotFoundError('Product not found with this ID'));
 
         return right(product);
     }

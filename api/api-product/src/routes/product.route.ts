@@ -10,5 +10,6 @@ const controller = wrapController(new ProductController());
 
 productRoutes.post("/", validate(schemaProduct), controller.create);
 productRoutes.get("/", controller.list);
+productRoutes.get("/:id", controller.find);
 
 export default productRoutes;
