@@ -8,6 +8,7 @@ import { ListProductsUseCase } from "../../domain/Product/useCase/list";
 import { FindPruductUseCase } from "../../domain/Product/useCase/find";
 import { IdParamSchema } from "../../domain/Product/schema/schema.paramsID";
 import { DestroyProductUseCase } from "../../domain/Product/useCase/destroy";
+import { EditProductUseCase } from "../../domain/Product/useCase/Edit";
 
 export class ProductController {
     private readonly repository = new ProductPrismaRepository();
@@ -15,6 +16,7 @@ export class ProductController {
     private readonly listUseCase = new ListProductsUseCase(this.repository);
     private readonly findUsecCase = new FindPruductUseCase(this.repository);
     private readonly destroyUseCase = new DestroyProductUseCase(this.repository);
+    private readonly editUseCase = new EditProductUseCase(this.repository);
 
     async create(req: Request, res: Response): Promise<void> {
 
@@ -116,6 +118,42 @@ export class ProductController {
         }
 
         logger.info('✅ Product deleted successfully.');
+        res.sendStatus(204);
+    }
+
+    async update(req: Request, res: Response) {
+        const { error, value } = IdParamSchema.validate(req.params, { abortEarly: false });
+
+        if (error) {
+            logger.warn(`❌ Invalid ID format: ${error.message}`);
+            res.status(400).json({
+                message: 'Validation failed.',
+                content: {
+                    errors: error.details.map((d) => d.message),
+                },
+            });
+            return;
+        }
+
+        const { id } = value;
+
+        logger.info('🔄 Updating product...');
+        const result = await this.editUseCase.execute({ id, ...req.body });
+
+
+        if (result.isLeft()) {
+            const error = result.value as GenericErrors;
+            logger.warn(`❌ Updated failed: ${error.message}`);
+            res.status(error.statusCode).json({
+                message: 'Product updated failed.',
+                content: {
+                    error: error.message,
+                },
+            });
+            return;
+        }
+
+        logger.info('✅ Product updated successfully.');
         res.sendStatus(204);
     }
 }

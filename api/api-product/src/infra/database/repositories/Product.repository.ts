@@ -32,8 +32,9 @@ export class ProductPrismaRepository implements ProductRepository {
         return result.map(product => ProductPrismaMapper.toDomain(product));
     }
 
-    async save(planet: Product): Promise<void> {
-        const data = ProductPrismaMapper.toDatabase(planet);
+    async save(product: Product): Promise<void> {
+
+        const data = ProductPrismaMapper.toDatabase(product);
 
         await this.prisma.product.update({ where: { id: data.id }, data });
     }

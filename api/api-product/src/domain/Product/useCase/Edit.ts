@@ -16,17 +16,21 @@ export class EditProductUseCase {
     constructor(private readonly productRepository: ProductRepository) { }
 
     async execute(data: Request): Promise<Response> {
+        const { ...dataL } = data
+        console.log(dataL)
         const product = await this.productRepository.findMany(data.id);
 
         if (!product) {
-            return left(new NotFoundError());
+            return left(new NotFoundError('Product not found with this ID'));
         }
 
-        if (data.name) product.name = data.name
-        if (data.price) product.price = data.price;
-        if (data.description) product.description = data.description
+        const updateData = {
+            ...(data.name !== undefined && { name: data.name }),
+            ...(data.price !== undefined && { price: data.price }),
+            ...(data.description !== undefined && { description: data.description }),
+        };
 
-        await this.productRepository.save(product);
+        await this.productRepository.save(updateData);
 
         return right(true);
     }
