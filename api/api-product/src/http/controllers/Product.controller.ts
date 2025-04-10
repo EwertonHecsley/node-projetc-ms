@@ -7,12 +7,14 @@ import logger from "../../domain/utils/logger";
 import { ListProductsUseCase } from "../../domain/Product/useCase/list";
 import { FindPruductUseCase } from "../../domain/Product/useCase/find";
 import { IdParamSchema } from "../../domain/Product/schema/schema.paramsID";
+import { DestroyProductUseCase } from "../../domain/Product/useCase/destroy";
 
 export class ProductController {
     private readonly repository = new ProductPrismaRepository();
     private readonly createUseCase = new CreateProductUseCase(this.repository);
     private readonly listUseCase = new ListProductsUseCase(this.repository);
     private readonly findUsecCase = new FindPruductUseCase(this.repository);
+    private readonly destroyUseCase = new DestroyProductUseCase(this.repository);
 
     async create(req: Request, res: Response): Promise<void> {
 
@@ -52,7 +54,7 @@ export class ProductController {
 
     async find(req: Request, res: Response): Promise<void> {
 
-        const { error, value } = IdParamSchema.validate(req.params);
+        const { error, value } = IdParamSchema.validate(req.params, { abortEarly: false });
 
         if (error) {
             logger.warn(`❌ Invalid ID format: ${error.message}`);
@@ -80,5 +82,40 @@ export class ProductController {
             message: 'Product retrieved successfully.',
             product: ProductPresenter.toHTTP(result.value),
         });
+    }
+
+    async destroy(req: Request, res: Response): Promise<void> {
+        const { error, value } = IdParamSchema.validate(req.params, { abortEarly: false });
+
+        if (error) {
+            logger.warn(`❌ Invalid ID format: ${error.message}`);
+            res.status(400).json({
+                message: 'Validation failed.',
+                content: {
+                    errors: error.details.map((d) => d.message),
+                },
+            });
+            return;
+        }
+
+        const { id } = value;
+
+        logger.info('🗑️ Deleting product...');
+        const result = await this.destroyUseCase.execute({ id });
+
+        if (result.isLeft()) {
+            const error = result.value as GenericErrors;
+            logger.warn(`❌ Delete failed: ${error.message}`);
+            res.status(error.statusCode).json({
+                message: 'Product deletion failed.',
+                content: {
+                    error: error.message,
+                },
+            });
+            return;
+        }
+
+        logger.info('✅ Product deleted successfully.');
+        res.sendStatus(204);
     }
 }
