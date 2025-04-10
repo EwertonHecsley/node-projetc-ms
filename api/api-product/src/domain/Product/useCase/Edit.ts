@@ -17,16 +17,16 @@ export class EditProductUseCase {
 
     async execute(data: Request): Promise<Response> {
         const { ...dataL } = data
-        console.log(dataL)
-        const product = await this.productRepository.findMany(data.id);
+
+        const product = await this.productRepository.findMany(dataL.id);
 
         if (!product) {
             return left(new NotFoundError('Product not found with this ID'));
         }
 
-        if (data.name != undefined) product.name = data.name
-        if (data.price != undefined) product.price = data.price;
-        if (data.description != undefined) product.description = data.description
+        if (dataL.name) product.name = dataL.name
+        if (dataL.price) product.price = dataL.price;
+        if (dataL.description!) product.description = dataL.description
 
         await this.productRepository.save(product);
 
