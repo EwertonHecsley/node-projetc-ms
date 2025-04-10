@@ -24,13 +24,11 @@ export class EditProductUseCase {
             return left(new NotFoundError('Product not found with this ID'));
         }
 
-        const updateData = {
-            ...(data.name !== undefined && { name: data.name }),
-            ...(data.price !== undefined && { price: data.price }),
-            ...(data.description !== undefined && { description: data.description }),
-        };
+        if (data.name != undefined) product.name = data.name
+        if (data.price != undefined) product.price = data.price;
+        if (data.description != undefined) product.description = data.description
 
-        await this.productRepository.save(updateData);
+        await this.productRepository.save(product);
 
         return right(true);
     }

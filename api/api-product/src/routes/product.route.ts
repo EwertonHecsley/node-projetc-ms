@@ -13,6 +13,6 @@ productRoutes.post("/", validate(schemaProduct), controller.create);
 productRoutes.get("/", controller.list);
 productRoutes.get("/:id", controller.find);
 productRoutes.delete("/:id", controller.destroy);
-productRoutes.patch("/:id", validate(updateProductSchema), controller.update);
+productRoutes.put("/:id", validate(updateProductSchema), controller.update);
 
 export default productRoutes;

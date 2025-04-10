@@ -13,7 +13,7 @@ export const updateProductSchema = joi.object({
         'number.min': 'The product price cannot be less than 0.',
     }),
 
-    description: joi.string().messages({
+    description: joi.string().optional().messages({
         'string.base': 'Invalid format for the description field.',
     }),
 }).min(1).messages({
