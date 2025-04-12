@@ -74,10 +74,12 @@ npm run build
 
 - **Domain-Driven Design (DDD)**
 - **Clean Architecture**
-- ***Tratamento de erro com Either**
+- **Tratamento de erro com `Either`**
 - **Logs com `Pino`**
 
+---
 
-
+## 📌 Exemplos de requisição
+Criar um produto
 
 
