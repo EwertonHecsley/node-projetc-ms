@@ -21,7 +21,7 @@ export class ProductPrismaMapper {
             id: entity.id.valueId,
             name: entity.name,
             price: entity.price,
-            description: entity.description ?? null
+            description: entity.description
         }
     }
 }
