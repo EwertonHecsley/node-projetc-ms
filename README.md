@@ -31,3 +31,4 @@ Este é um serviço de produtos desenvolvido com **Node.js**, **TypeScript**, **
 
 ## 📁 Estrutura do Projeto
 
+src/ ├── core/ # Generics e base entities ├── domain/ # Entidades, enums e regras de negócio ├── application/ # Casos de uso ├── infrastructure/ # Banco de dados (Prisma), repositórios e middlewares ├── http/ # Controllers, routes e validações ├── utils/ # Logger e helpers
