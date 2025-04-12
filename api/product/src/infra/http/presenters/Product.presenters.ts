@@ -1,4 +1,5 @@
-import Product from "../../domain/Product/entity/Product.entity";
+import Product from "../../../domain/product/entity/Product.entity"
+
 
 export class ProductPresenter {
 

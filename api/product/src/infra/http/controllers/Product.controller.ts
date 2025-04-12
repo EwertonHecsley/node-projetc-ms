@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import { ProductPresenter } from "../presenters/Product.presenters";
-import { ProductPrismaRepository } from "../../infra/database/repositories/Product.repository";
-import { CreateProductUseCase } from "../../domain/Product/useCase/create";
-import { GenericErrors } from "../../domain/Product/errors/GenericError";
-import logger from "../../domain/utils/logger";
-import { ListProductsUseCase } from "../../domain/Product/useCase/list";
-import { FindPruductUseCase } from "../../domain/Product/useCase/find";
-import { IdParamSchema } from "../../domain/Product/schema/schema.paramsID";
-import { DestroyProductUseCase } from "../../domain/Product/useCase/destroy";
-import { EditProductUseCase } from "../../domain/Product/useCase/Edit";
+import { ProductPrismaRepository } from "../../database/repositories/Product.repository";
+import { CreateProductUseCase } from "../../../domain/product/useCase/create";
+import { ListProductsUseCase } from "../../../domain/product/useCase/list";
+import { FindPruductUseCase } from "../../../domain/product/useCase/find";
+import { DestroyProductUseCase } from "../../../domain/product/useCase/destroy";
+import { EditProductUseCase } from "../../../domain/product/useCase/Edit";
+import logger from "../../../domain/utils/logger";
+import { GenericErrors } from "../../../domain/product/errors/GenericError";
+import { IdParamSchema } from "../../../domain/product/schema/schema.paramsID";
+
 
 export class ProductController {
     private readonly repository = new ProductPrismaRepository();
