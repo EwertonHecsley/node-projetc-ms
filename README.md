@@ -97,7 +97,7 @@ Content-Type: application/json`
 
 ```
 
-Retorno esoerado
+Retorno esperado
 
 ```json
 
