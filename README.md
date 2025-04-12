@@ -46,5 +46,38 @@ src/
 
 ## 📦 Instalação
 
+```bash
+git clone git@github.com:EwertonHecsley/node-projetc-sercive-product.git
+cd api
+npm install
+
+```
+
+---
+
+▶️ Rodando em desenvolvimento
+
+```bash
+npm run dev
+```
+---
+
+🛠️ Build para produção
+
+```bash
+npm run build
+```
+
+---
+
+🧭 Padrões aplicados
+
+- **Domain-Driven Design (DDD)**
+- **Clean Architecture**
+- ***Tratamento de erro com Either**
+- **Logs com `Pino`**
+
+
+
 
 
