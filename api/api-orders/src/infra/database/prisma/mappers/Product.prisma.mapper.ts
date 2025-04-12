@@ -1,5 +1,5 @@
 import { Product as DatabaseProduct } from "@prisma/client";
-import Product from "../../../../domain/Product/entity/Product.entity";
+import Product from "../../../../domain/product/entity/Product.entity";
 import Identity from "../../../../core/generics/Identity";
 
 

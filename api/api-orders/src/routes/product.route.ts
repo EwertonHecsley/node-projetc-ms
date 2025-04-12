@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { ProductController } from '../http/controllers/Product.controller';
 import { wrapController } from '../domain/utils/assyncController';
 import { validate } from '../http/middlewares/validate';
-import { schemaProduct } from '../domain/Product/schema/schema.product';
-import { updateProductSchema } from '../domain/Product/schema/schema.updateProducts';
+import { schemaProduct } from '../domain/product/schema/schema.product';
+import { updateProductSchema } from '../domain/product/schema/schema.updateProducts';
 
 
 const productRoutes = Router();

@@ -1,5 +1,5 @@
-import Product from "../../../domain/Product/entity/Product.entity";
-import { ProductRepository } from "../../../domain/Product/repository/Product.repository";
+import Product from "../../../domain/product/entity/Product.entity";
+import { ProductRepository } from "../../../domain/product/repository/Product.repository";
 import { ProductPrismaMapper } from "../prisma/mappers/Product.prisma.mapper";
 import getPrismaInstance from '../prisma/singleton.prisma';
 
