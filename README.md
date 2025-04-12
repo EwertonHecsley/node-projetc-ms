@@ -83,7 +83,7 @@ npm run build
 
 Criar um produto
 
-```
+```json
   POST /products
 Content-Type: application/json
 
@@ -98,7 +98,7 @@ Content-Type: application/json
 
 Retorno esoerado
 
-```
+```json
   {
   "id": "uuid",
   "name": "Produto Teste",
