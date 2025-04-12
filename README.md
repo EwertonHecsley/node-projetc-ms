@@ -31,4 +31,17 @@ Este é um serviço de produtos desenvolvido com **Node.js**, **TypeScript**, **
 
 ## 📁 Estrutura do Projeto
 
-src/ ├── core/ # Generics e base entities ├── domain/ # Entidades, enums e regras de negócio ├── application/ # Casos de uso ├── infrastructure/ # Banco de dados (Prisma), repositórios e middlewares ├── http/ # Controllers, routes e validações ├── utils/ # Logger e helpers
+```bash
+src/
+├── application/         # Casos de uso
+├── core/                # Generics e entidades base
+├── domain/              # Entidades, enums e regras de negócio
+│   └── utils/           # Logger e helpers do domínio
+├── http/                # Controllers, rotas e validações
+├── infrastructure/      # Prisma, repositórios e middlewares
+└── server.ts            # Entry point
+
+```
+
+
+
