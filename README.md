@@ -55,14 +55,14 @@ npm install
 
 ---
 
-▶️ Rodando em desenvolvimento
+## ▶️ Rodando em desenvolvimento
 
 ```bash
 npm run dev
 ```
 ---
 
-🛠️ Build para produção
+## 🛠️ Build para produção
 
 ```bash
 npm run build
@@ -70,7 +70,7 @@ npm run build
 
 ---
 
-🧭 Padrões aplicados
+## 🧭 Padrões aplicados
 
 - **Domain-Driven Design (DDD)**
 - **Clean Architecture**
@@ -80,6 +80,35 @@ npm run build
 ---
 
 ## 📌 Exemplos de requisição
+
 Criar um produto
+
+```
+  POST /products
+Content-Type: application/json
+
+{
+  "name": "Produto Teste",
+  "price": 49.90,
+  "description": "Descrição do produto",
+  "category": "Eletrônicos"
+}
+
+```
+
+Retorno esoerado
+
+```
+  {
+  "id": "uuid",
+  "name": "Produto Teste",
+  "price": 49.90,
+  "description": "Descrição do produto",
+  "category": "Eletrônicos"
+}
+
+```
+
+
 
 
