@@ -42,6 +42,9 @@ src/
 └── server.ts            # Entry point
 
 ```
+---
+
+## 📦 Instalação
 
 
 
