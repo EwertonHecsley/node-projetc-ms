@@ -10,6 +10,7 @@ export class ProductPrismaMapper {
             {
                 name: entity.name,
                 price: entity.price,
+                quantity: entity.quantity,
                 description: entity.description ?? undefined
             },
             new Identity(entity.id)
@@ -21,6 +22,7 @@ export class ProductPrismaMapper {
             id: entity.id.valueId,
             name: entity.name,
             price: entity.price,
+            quantity: entity.quantity,
             description: entity.description
         }
     }

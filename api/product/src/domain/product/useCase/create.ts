@@ -6,6 +6,7 @@ import { ProductRepository } from "../repository/Product.repository";
 type Request = {
     name: string;
     price: number;
+    quantity: number;
     description?: string;
 }
 

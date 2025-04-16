@@ -4,7 +4,8 @@ import Identity from "../../../core/generics/Identity";
 type ProductType = {
     name: string;
     price: number;
-    description?: string;
+    quantity: number;
+    description: string;
 }
 
 export default class Product extends Entity<ProductType> {
@@ -21,7 +22,11 @@ export default class Product extends Entity<ProductType> {
         return this.attributes.price;
     }
 
-    get description(): string | undefined {
+    get quantity(): number {
+        return this.attributes.quantity;
+    }
+
+    get description(): string {
         return this.attributes.description
     }
 
@@ -31,6 +36,10 @@ export default class Product extends Entity<ProductType> {
 
     set price(price: number) {
         this.attributes.price = price;
+    }
+
+    set quantity(quantity: number) {
+        this.attributes.quantity = quantity;
     }
 
     set description(description: string) {

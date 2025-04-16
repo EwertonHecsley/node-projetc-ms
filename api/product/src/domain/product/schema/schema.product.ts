@@ -13,6 +13,12 @@ export const schemaProduct = joi.object({
         'number.base': 'The price field must be a valid number.',
         'number.min': 'The product price cannot be less than 0.',
     }),
+    quantity: joi.number().required().min(0).messages({
+        'any.required': 'The quantity field is required.',
+        'string.empty': 'The quantity field cannot be empty.',
+        'number.base': 'The quantity field must be a valid number.',
+        'number.min': 'The product quantity cannot be less than 0.',
+    }),
     description: joi.string().optional().messages({
         'string.base': 'Invalid format for the description field.',
     }),

@@ -11,6 +11,7 @@ model Product {
   id          String @id @default(uuid()) @db.Uuid
   name        String @unique
   price       Float
+  quantity    Int    @default(0) @db.Integer
   description String
 
   @@map("products")
