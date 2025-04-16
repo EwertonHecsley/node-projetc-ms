@@ -12,4 +12,6 @@ model Product {
   name        String @unique
   price       Float
   description String
+
+  @@map("products")
 }
