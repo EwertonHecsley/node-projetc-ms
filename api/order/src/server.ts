@@ -1,9 +1,4 @@
 import 'dotenv/config';
-import app from ".";
+import { App } from './App';
 
-const PORT = process.env.PORT || 3002;
-
-app.listen(PORT, () => {
-    console.log(`Order service is running on port ${PORT}`);
-});
-
+new App().bootstrap();
