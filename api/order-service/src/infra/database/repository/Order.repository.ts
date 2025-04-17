@@ -1,6 +1,6 @@
 import { Order } from "../../../domain/order/entity/Order.entity";
 import { OrderRepository } from "../../../domain/order/repository/Order.repository";
-import { OrderPrismaMapper } from "../prisma/mappers/Order.prismaMapper";
+import { ExternalProduct, OrderPrismaMapper } from "../prisma/mappers/Order.prismaMapper";
 import getPrismaInstance from "../prisma/singleton.prisma";
 
 export class OrderPrismaRepository implements OrderRepository {
@@ -11,7 +11,7 @@ export class OrderPrismaRepository implements OrderRepository {
 
         const order = await this.prisma.order.create({ data });
 
-        return await OrderPrismaMapper.toDomain(order);
+        return await OrderPrismaMapper.toDomain(order, entity.products);
     }
 
 
@@ -22,6 +22,6 @@ export class OrderPrismaRepository implements OrderRepository {
             return undefined;
         }
 
-        return OrderPrismaMapper.toDomain(order)
+        return OrderPrismaMapper.toDomain(order, order.products as ExternalProduct[]);
     }
 }

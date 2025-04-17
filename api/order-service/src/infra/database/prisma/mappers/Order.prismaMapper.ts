@@ -4,7 +4,7 @@ import { OrderDate } from "../../../../domain/order/object-value/OrderDate";
 import { StatusOrder } from "../../../../domain/order/enums/StatusOrder";
 import Identity from "../../../../core/generics/Identity";
 
-type ExternalProduct = {
+export type ExternalProduct = {
     id: string;
     name: string;
     quantity: number;
