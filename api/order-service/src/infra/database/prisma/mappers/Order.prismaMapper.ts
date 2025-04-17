@@ -2,25 +2,27 @@ import { Order as OrderDatabase, Prisma } from "@prisma/client";
 import { Order } from "../../../../domain/order/entity/Order.entity";
 import { OrderDate } from "../../../../domain/order/object-value/OrderDate";
 import { StatusOrder } from "../../../../domain/order/enums/StatusOrder";
-import { ProductCacheService } from "../../../cache/Redis.service";
+import Identity from "../../../../core/generics/Identity";
 
+type ExternalProduct = {
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+    description: string;
+};
 
 export class OrderPrismaMapper {
-    static async toDomain(entity: OrderDatabase): Promise<Order> {
-        const fullProducts = await Promise.all(
-            (entity.products as { id: string }[]).map(p => ProductCacheService.getProductById(p.id))
+    static toDomain(entity: OrderDatabase, products: ExternalProduct[]): Order {
+        return Order.create(
+            {
+                products,
+                totalPrice: entity.totalPrice,
+                orderDate: OrderDate.from(entity.orderDate),
+                status: entity.status as StatusOrder,
+            },
+            new Identity(entity.id)
         );
-
-        if (fullProducts.some(p => p === null)) {
-            throw new Error('Produto(s) não encontrado(s) na cache.');
-        }
-
-        return Order.create({
-            products: fullProducts as any,
-            totalPrice: entity.totalPrice,
-            orderDate: OrderDate.from(entity.orderDate),
-            status: entity.status as StatusOrder,
-        });
     }
 
     static toDatabase(entity: Order): Prisma.OrderCreateInput {
@@ -30,6 +32,8 @@ export class OrderPrismaMapper {
                 id: product.id,
                 name: product.name,
                 price: product.price,
+                quantity: product.quantity,
+                description: product.description,
             })) as Prisma.InputJsonValue,
             totalPrice: entity.totalPrice,
             orderDate: entity.orderDate.raw,
