@@ -1,5 +1,5 @@
-import Entity from "../../core/generics/Entity";
-import Identity from "../../core/generics/Identity";
+import Entity from "../../../core/generics/Entity";
+import Identity from "../../../core/generics/Identity";
 import { StatusOrder } from "../enums/StatusOrder";
 import { OrderDate } from "../object-value/OrderDate";
 
