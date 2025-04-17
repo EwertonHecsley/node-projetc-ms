@@ -1,6 +1,7 @@
 export enum StatusOrder {
-    PENDENTE = 'pendente',
-    PAGO = 'pago',
-    CANCELADO = 'cancelado',
-    ENVIADO = 'enviado',
+    STOPED = 'parado',
+    PENDING = 'pendente',
+    PAID = 'pago',
+    CANCELLED = 'cancelado',
+    COMPLETED = 'enviado',
 }
