@@ -1,5 +1,5 @@
 export enum StatusOrder {
-    STOPED = 'parado',
+    STOPPED = 'parado',
     PENDING = 'pendente',
     PAID = 'pago',
     CANCELLED = 'cancelado',

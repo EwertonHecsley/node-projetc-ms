@@ -18,10 +18,10 @@ type OrderProps = {
     status: StatusOrder;
 }
 
-export class OrderEntity extends Entity<OrderProps> {
+export class Order extends Entity<OrderProps> {
 
     static create(data: OrderProps, id?: Identity) {
-        return new OrderEntity(
+        return new Order(
             {
                 ...data,
                 orderDate: OrderDate.now(),

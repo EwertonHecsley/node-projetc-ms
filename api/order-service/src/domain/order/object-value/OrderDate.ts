@@ -9,6 +9,10 @@ export class OrderDate {
         return new OrderDate(new Date());
     }
 
+    static from(date: Date): OrderDate {
+        return new OrderDate(date);
+    }
+
     get raw(): Date {
         return this.value;
     }
