@@ -13,7 +13,8 @@ export default class EnvironmentValidator {
         return joi.object(
             {
                 NODE_ENV: joi.string().valid('development', 'production', 'test').required(),
-                PORT: joi.number()
+                PORT: joi.number(),
+                DATABASE_URL: joi.string().uri()
             }
         ).unknown(true);
     }
