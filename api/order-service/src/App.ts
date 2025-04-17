@@ -1,14 +1,14 @@
-import EnvironmentValidator from './EnvairomentsValidate';
-import app from './index';
-import logger from './utils/logger';
-
+import app from ".";
+import EnvironmentValidator from "./EnvairomentsValidate";
+import getPrismaInstance from "./infra/database/prisma/singleton.prisma";
+import logger from "./utils/logger";
 
 export class App {
-
+    private prisma = getPrismaInstance();
     private readonly port = process.env.PORT
 
     async bootstrap(): Promise<void> {
-
+        await this.prisma.connect()
         this.validateEnv();
         this.startServer();
         this.handleGracefulShutdown();
@@ -28,7 +28,9 @@ export class App {
     private handleGracefulShutdown(): void {
         process.on('SIGINT', async () => {
             logger.info('🔌 Gracefully shutting down...');
-            logger.info('✅ Application terminated.');
+            logger.info('Closing Prisma connection...');
+            await this.prisma.disconnect();
+            logger.info('✅ Prisma disconnected. Application terminated.');
             process.exit(0);
         });
     }
