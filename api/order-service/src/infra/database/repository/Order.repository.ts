@@ -24,4 +24,15 @@ export class OrderPrismaRepository implements OrderRepository {
 
         return OrderPrismaMapper.toDomain(order, order.products as ExternalProduct[]);
     }
+
+    async list(): Promise<Order[]> {
+        const result = await this.prisma.order.findMany();
+
+        return result.map(order =>
+            OrderPrismaMapper.toDomain(
+                order,
+                order.products as ExternalProduct[]
+            )
+        );
+    }
 }

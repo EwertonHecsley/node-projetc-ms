@@ -18,7 +18,7 @@ type Request = {
 
 type Response = Either<NotFound | BadRequest, { order: Order; }>;
 
-export class CreateOrder {
+export class CreateOrderUseCase {
 
     constructor(private readonly orderReposiroy: OrderRepository) { }
 
