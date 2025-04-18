@@ -7,7 +7,7 @@ type Request = {
     name: string;
     price: number;
     quantity: number;
-    description?: string;
+    description: string;
 }
 
 type Response = Either<null | BadRequest, Product>
