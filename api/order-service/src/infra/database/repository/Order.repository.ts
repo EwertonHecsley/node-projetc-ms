@@ -15,7 +15,7 @@ export class OrderPrismaRepository implements OrderRepository {
     }
 
 
-    async findMany(id: string): Promise<Order | undefined> {
+    async find(id: string): Promise<Order | undefined> {
         const order = await this.prisma.order.findUnique({ where: { id } });
 
         if (!order) {
