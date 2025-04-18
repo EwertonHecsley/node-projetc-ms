@@ -8,5 +8,7 @@ const orderRoutes = Router();
 const controller = wrapController(new OderController());
 
 orderRoutes.post('/', validate(createOrderSchema), controller.create);
+orderRoutes.get('/', controller.listAll);
+orderRoutes.get('/:id', controller.findById);
 
 export default orderRoutes;
