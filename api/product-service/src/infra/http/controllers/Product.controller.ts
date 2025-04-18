@@ -22,9 +22,9 @@ export class ProductController {
     async create(req: Request, res: Response): Promise<void> {
 
         logger.info('📦 Creating new product...');
-        const { name, price, description } = req.body;
+        const { name, price, description, quantity } = req.body;
 
-        const result = await this.createUseCase.execute({ name, price, description });
+        const result = await this.createUseCase.execute({ name, price, description, quantity });
 
         if (result.isLeft()) {
             const error = result.value as GenericErrors;
