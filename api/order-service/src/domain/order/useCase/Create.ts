@@ -6,6 +6,7 @@ import { OrderRepository } from "../repository/Order.repository";
 import { NotFound } from "../error/custom/NotFoundError";
 import { BadRequest } from "../error/custom/BadRequestError";
 import { StatusOrder } from "../enums/StatusOrder";
+import { Producer } from "../../../infra/messaging/rabbitmq/Producer";
 
 
 type Request = {
@@ -54,6 +55,8 @@ export class CreateOrder {
         });
 
         await this.orderReposiroy.create(order);
+
+        Producer.sendMessage(`Novo pedido criado: ${order.id}`);
 
         return right({ order });
     }
