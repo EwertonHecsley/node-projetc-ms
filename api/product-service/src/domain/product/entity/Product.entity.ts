@@ -43,6 +43,6 @@ export default class Product extends Entity<ProductType> {
     }
 
     set description(description: string) {
-        this.attributes.description;
+        this.attributes.description = description;
     }
 }

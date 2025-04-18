@@ -7,6 +7,7 @@ type Request = {
     name?: string;
     price?: number;
     description?: string;
+    quantity?: number;
 }
 
 type Response = Either<NotFoundError, boolean>;
@@ -24,9 +25,12 @@ export class EditProductUseCase {
             return left(new NotFoundError('Product not found with this ID'));
         }
 
-        if (dataL.name) product.name = dataL.name
-        if (dataL.price) product.price = dataL.price;
-        if (dataL.description!) product.description = dataL.description
+        Object.entries(dataL).forEach(([key, value]) => {
+            if (key !== 'id' && typeof value !== 'undefined' && key in product) {
+                (product as any)[key] = value;
+            }
+        });
+
 
         await this.productRepository.save(product);
 
