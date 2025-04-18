@@ -2,7 +2,7 @@ import amqp from 'amqplib/callback_api';
 import logger from '../../../utils/logger';
 
 export class Producer {
-    private static connectionUrl = 'amqp://localhost';
+    private static connectionUrl = 'amqp://guest:guest@localhost:5672';
     private static exchange = 'order.exchange';
 
 

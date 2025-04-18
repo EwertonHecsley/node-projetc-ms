@@ -8,7 +8,8 @@ export class ProductPresenter {
             id: entity.id.valueId,
             name: entity.name,
             price: entity.price,
-            description: entity.description
+            description: entity.description,
+            quantity: entity.quantity
         }
     }
 }

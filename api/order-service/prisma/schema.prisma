@@ -12,14 +12,15 @@ model Order {
   products   Json
   totalPrice Float
   orderDate  DateTime    @default(now())
-  status     StatusOrder @default(STOPPED)
+  status     StatusOrder @default(parado)
 
   @@map("orders")
 }
 
 enum StatusOrder {
-  STOPPED
-  PENDING
-  COMPLETED
-  CANCELLED
+  parado
+  pendente
+  pago
+  cancelado
+  enviado
 }

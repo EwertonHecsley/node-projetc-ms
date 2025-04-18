@@ -16,14 +16,17 @@ export class ProductCacheService {
         const cached = await redis.get(this.cache_key);
 
         if (cached) {
-            return JSON.parse(cached);
+            const parsed = JSON.parse(cached);
+            return parsed.products;
         }
 
-        const { data } = await axios.get<Product[]>('http://localhost:3001/products');
+        const { data } = await axios.get<{ message: string; products: Product[] }>('http://localhost:3001/product');
+
         await redis.set(this.cache_key, JSON.stringify(data), 'EX', 60 * 5);
 
-        return data;
+        return data.products;
     }
+
 
     static async getProductById(id: string): Promise<Product | null> {
         const products = await this.getProducts();

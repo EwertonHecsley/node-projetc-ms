@@ -27,7 +27,7 @@ export class OrderPrismaMapper {
 
     static toDatabase(entity: Order): Prisma.OrderCreateInput {
         return {
-            id: entity.id.toString(),
+            id: entity.id.valueId,
             products: entity.products.map(product => ({
                 id: product.id,
                 name: product.name,

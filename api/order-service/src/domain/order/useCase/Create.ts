@@ -23,9 +23,11 @@ export class CreateOrderUseCase {
     constructor(private readonly orderReposiroy: OrderRepository) { }
 
     async execute(request: Request): Promise<Response> {
+
         const fetchedProducts = [];
 
         for (const item of request.products) {
+
             const product = await ProductCacheService.getProductById(item.id);
 
             if (!product) {

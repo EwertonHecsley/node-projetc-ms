@@ -7,7 +7,7 @@ export class OrderPresenter {
             id: entity.id.valueId,
             products: entity.products,
             totalPrice: entity.totalPrice,
-            orderDate: entity.orderDate,
+            orderDate: entity.orderDate.formatBR(),
             status: entity.status
         }
     }
