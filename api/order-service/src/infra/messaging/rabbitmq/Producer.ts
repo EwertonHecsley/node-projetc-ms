@@ -6,7 +6,7 @@ export class Producer {
     private static exchange = 'order.exchange';
 
 
-    public static sendMessage(message: string): void {
+    public static sendMessage(message: any): void {
         amqp.connect(this.connectionUrl, (error, connection) => {
             if (error) {
                 logger.error('Erro ao conectar no RabbitMQ (Producer):', error);
@@ -21,9 +21,10 @@ export class Producer {
 
                 channel.assertExchange(this.exchange, 'fanout', { durable: true });
 
+                const payload = JSON.stringify(message);
+                channel.publish(this.exchange, '', Buffer.from(payload));
 
-                channel.publish(this.exchange, '', Buffer.from(message));
-                logger.info(`Mensagem enviada para exchange ${this.exchange}: ${message}`);
+                logger.info(`📨 Mensagem enviada para exchange ${this.exchange}: ${payload}`);
 
                 setTimeout(() => {
                     connection.close();
@@ -31,4 +32,5 @@ export class Producer {
             });
         });
     }
+
 }

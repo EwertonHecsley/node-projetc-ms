@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { ProductPresenter } from "../presenters/Product.presenters";
 import { ProductPrismaRepository } from "../../database/repositories/Product.repository";
-import { CreateProductUseCase } from "../../../domain/product/useCase/create";
-import { ListProductsUseCase } from "../../../domain/product/useCase/list";
-import { FindPruductUseCase } from "../../../domain/product/useCase/find";
-import { DestroyProductUseCase } from "../../../domain/product/useCase/destroy";
+import { CreateProductUseCase } from "../../../domain/product/useCase/Create";
+import { ListProductsUseCase } from "../../../domain/product/useCase/List";
+import { FindPruductUseCase } from "../../../domain/product/useCase/Find";
+import { DestroyProductUseCase } from "../../../domain/product/useCase/Destroy";
 import { EditProductUseCase } from "../../../domain/product/useCase/Edit";
 import logger from "../../../domain/utils/logger";
 import { GenericErrors } from "../../../domain/product/errors/GenericError";

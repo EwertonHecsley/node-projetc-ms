@@ -8,7 +8,6 @@ import { BadRequest } from "../error/custom/BadRequestError";
 import { StatusOrder } from "../enums/StatusOrder";
 import { Producer } from "../../../infra/messaging/rabbitmq/Producer";
 
-
 type Request = {
     products: {
         id: string;
@@ -16,18 +15,15 @@ type Request = {
     }[];
 };
 
-type Response = Either<NotFound | BadRequest, { order: Order; }>;
+type Response = Either<NotFound | BadRequest, { order: Order }>;
 
 export class CreateOrderUseCase {
-
     constructor(private readonly orderReposiroy: OrderRepository) { }
 
     async execute(request: Request): Promise<Response> {
-
         const fetchedProducts = [];
 
         for (const item of request.products) {
-
             const product = await ProductCacheService.getProductById(item.id);
 
             if (!product) {
@@ -53,12 +49,17 @@ export class CreateOrderUseCase {
             products: fetchedProducts,
             totalPrice,
             orderDate: OrderDate.now(),
-            status: StatusOrder.PENDING
+            status: StatusOrder.PENDING,
         });
 
         await this.orderReposiroy.create(order);
 
-        Producer.sendMessage(`Novo pedido criado: ${order.id}`);
+        for (const product of fetchedProducts) {
+            Producer.sendMessage({
+                productId: product.id,
+                quantitySold: product.quantity,
+            });
+        }
 
         return right({ order });
     }

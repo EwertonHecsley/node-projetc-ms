@@ -2,6 +2,7 @@ import app from './index';
 import EnvironmentValidator from './EnviromentValidate';
 import getPrismaInstance from './infra/database/prisma/singleton.prisma';
 import logger from './domain/utils/logger';
+import { Consumer } from './infra/messaging/rabbitmq/Consumer';
 
 export class App {
     private prisma = getPrismaInstance();
@@ -11,6 +12,7 @@ export class App {
         await this.prisma.connect()
         this.validateEnv();
         this.startServer();
+        this.startConsumer();
         this.handleGracefulShutdown();
     }
 
@@ -23,6 +25,11 @@ export class App {
         app.listen(this.port, () => {
             logger.info(`🟢 Server is running on port ${this.port}`);
         });
+    }
+
+    private startConsumer(): void {
+        logger.info('📡 Iniciando o consumidor RabbitMQ...');
+        Consumer.consumeMessages();
     }
 
     private handleGracefulShutdown(): void {
