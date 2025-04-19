@@ -19,7 +19,7 @@ export class EditProductUseCase {
     async execute(data: Request): Promise<Response> {
         const { ...dataL } = data
 
-        const product = await this.productRepository.findMany(dataL.id);
+        const product = await this.productRepository.findById(dataL.id);
 
         if (!product) {
             return left(new NotFoundError('Product not found with this ID'));

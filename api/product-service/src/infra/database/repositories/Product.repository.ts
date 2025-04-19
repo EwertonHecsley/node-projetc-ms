@@ -16,7 +16,7 @@ export class ProductPrismaRepository implements ProductRepository {
 
     }
 
-    async findMany(id: string): Promise<Product | undefined> {
+    async findById(id: string): Promise<Product | undefined> {
         const result = await this.prisma.product.findFirst({ where: { id } });
 
         if (!result) {

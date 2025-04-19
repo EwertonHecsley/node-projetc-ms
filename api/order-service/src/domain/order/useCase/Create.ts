@@ -7,6 +7,8 @@ import { NotFound } from "../error/custom/NotFoundError";
 import { BadRequest } from "../error/custom/BadRequestError";
 import { StatusOrder } from "../enums/StatusOrder";
 import { Producer } from "../../../infra/messaging/rabbitmq/Producer";
+import { PaymentConsumer } from "../../../infra/messaging/rabbitmq/PayamentConsumer";
+import logger from "../../../utils/logger";
 
 type Request = {
     products: {
@@ -18,7 +20,9 @@ type Request = {
 type Response = Either<NotFound | BadRequest, { order: Order }>;
 
 export class CreateOrderUseCase {
-    constructor(private readonly orderReposiroy: OrderRepository) { }
+    constructor(
+        private readonly orderRepository: OrderRepository
+    ) { }
 
     async execute(request: Request): Promise<Response> {
         const fetchedProducts = [];
@@ -52,15 +56,39 @@ export class CreateOrderUseCase {
             status: StatusOrder.PENDING,
         });
 
-        await this.orderReposiroy.create(order);
+        const paymentMessage = {
+            type: 'payment.request',
+            orderId: order.id.valueId,
+            totalPrice,
+            products: fetchedProducts,
+        };
 
-        for (const product of fetchedProducts) {
-            Producer.sendMessage({
-                productId: product.id,
-                quantitySold: product.quantity,
-            });
+        Producer.sendMessage(paymentMessage);
+        logger.info(`Solicitação de pagamento enviada para o pedido ${order.id.valueId}`);
+
+        try {
+            const paymentResponse = await PaymentConsumer.consumePaymentResponse(order.id.valueId);
+
+            if (paymentResponse === 'pago') {
+                order.status = StatusOrder.PAID;
+                await this.orderRepository.create(order);
+
+                for (const product of fetchedProducts) {
+                    Producer.sendMessage({
+                        type: 'product.stock.updated',
+                        productId: product.id,
+                        quantitySold: product.quantity,
+                    });
+                }
+                logger.info(`Solicitação de atualização de estoque enviada para o pedido ${order.id.valueId}`);
+
+                return right({ order });
+            } else {
+                return left(new BadRequest("Pagamento não realizado. Pedido cancelado."));
+            }
+        } catch (error) {
+            logger.error("Erro ao aguardar resposta de pagamento:", error);
+            return left(new BadRequest("Erro ao processar pagamento. Pedido cancelado."));
         }
-
-        return right({ order });
     }
 }

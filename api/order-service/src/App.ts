@@ -2,6 +2,7 @@ import app from ".";
 import EnvironmentValidator from "./EnvairomentsValidate";
 import getPrismaInstance from "./infra/database/prisma/singleton.prisma";
 import logger from "./utils/logger";
+import { PaymentConsumer } from "./infra/messaging/rabbitmq/PayamentConsumer"; // Importe o PaymentConsumer
 
 export class App {
     private prisma = getPrismaInstance();
@@ -10,6 +11,7 @@ export class App {
     async bootstrap(): Promise<void> {
         await this.prisma.connect()
         this.validateEnv();
+        PaymentConsumer.initialize();
         this.startServer();
         this.handleGracefulShutdown();
     }

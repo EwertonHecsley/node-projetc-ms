@@ -5,40 +5,37 @@ import { ProductPrismaRepository } from '../../database/repositories/Product.rep
 
 export class Consumer {
     private static connectionUrl = 'amqp://guest:guest@localhost:5672';
-    private static exchange = 'order.exchange';
+    private static exchangeName = 'order.events';
+    private static queueName = 'product.stock.updates.queue';
 
     public static consumeMessages(): void {
         const updateProductStockUseCase = new UpdateProductStockUseCase(new ProductPrismaRepository());
 
         amqp.connect(this.connectionUrl, (error, connection) => {
             if (error) {
-                logger.error('Erro ao conectar no RabbitMQ (Consumer):', error);
+                logger.error('Erro ao conectar no RabbitMQ (Consumer de Estoque):', error);
                 throw error;
             }
 
             connection.createChannel((error, channel) => {
                 if (error) {
-                    logger.error('Erro ao criar canal (Consumer):', error);
+                    logger.error('Erro ao criar canal (Consumer de Estoque):', error);
                     throw error;
                 }
 
-                channel.assertExchange(this.exchange, 'fanout', { durable: true });
+                channel.assertExchange(Consumer.exchangeName, 'fanout', { durable: true });
+                channel.assertQueue(Consumer.queueName, { durable: true });
+                channel.bindQueue(Consumer.queueName, Consumer.exchangeName, '');
+
+                channel.consume(Consumer.queueName, async (msg) => {
+                    if (msg) {
+                        try {
+                            const raw = msg.content.toString();
+                            const data = JSON.parse(raw);
 
 
-                channel.assertQueue('', { exclusive: true }, (error2, q) => {
-                    if (error2) {
-                        logger.error('Erro ao criar fila (Consumer):', error2);
-                        throw error2;
-                    }
-
-                    channel.bindQueue(q.queue, this.exchange, '');
-
-                    channel.consume(q.queue, async (msg) => {
-                        if (msg) {
-                            try {
-                                const raw = msg.content.toString();
-                                const data = JSON.parse(raw);
-                                logger.info(`📩 Mensagem recebida na fila ${q.queue}: ${raw}`);
+                            if (data.type === 'product.stock.updated') {
+                                logger.info(`📩 Mensagem de atualização de estoque recebida na fila ${Consumer.queueName}: ${raw}`);
 
                                 const result = await updateProductStockUseCase.execute({
                                     productId: data.productId,
@@ -50,13 +47,17 @@ export class Consumer {
                                 } else {
                                     logger.info('✅ Estoque atualizado com sucesso');
                                 }
+                                channel.ack(msg);
+                            } else {
 
-                            } catch (err) {
-                                logger.error('❌ Erro ao processar mensagem:', err);
+                                channel.ack(msg);
                             }
+                        } catch (err) {
+                            logger.error('❌ Erro ao processar mensagem de atualização de estoque:', err);
+                            channel.nack(msg);
                         }
-                    }, { noAck: true });
-                });
+                    }
+                }, { noAck: false });
             });
         });
     }
